@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-lg-5">
+            <div class="card bg-transparent p-4">
+                <div class="card-body">
+                    <h2 class="text-center mb-4 fs-1">Reset Password</h2>
+                    <form>
+                        <div class="mb-3">
+                           {{ResetPForm.as_table}}
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-lg btn-light mt-2">Reset Password</button>
+                        </div>
+                        <div class="form-options text-center mt-2">
+                            <p><a href="{% url 'index' %}" class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Back to Login</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
