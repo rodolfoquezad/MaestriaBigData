@@ -1,7 +1,0 @@
-from django.contrib import admin
-from backend.models import *
-
-# Register your models here.
-admin.site.register(User)
-admin.site.register(Group_Chat)
-admin.site.register(Message)
