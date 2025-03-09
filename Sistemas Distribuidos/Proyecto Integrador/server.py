@@ -4,9 +4,9 @@ import threading
 class Server:
 
     def __init__(self):
-        self.clients = {}  # Diccionario para almacenar los sockets de los clientes
-        self.usernames = []  # Lista para almacenar los nombres de usuario
-        self.groups = {}  # Diccionario para almacenar grupos y sus miembros
+        self.clients = {} 
+        self.usernames = [] 
+        self.groups = {}
 
     def start_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,7 +25,7 @@ class Server:
 
     def handle_client(self, client_socket, username):
         self.broadcast_users_list()
-        self.send_user_groups(username)  # Enviar la lista de grupos al usuario cuando se conecta
+        self.send_user_groups(username)
         while True:
             try:
                 message = client_socket.recv(1024).decode('utf-8')
@@ -58,20 +58,20 @@ class Server:
 
     def create_group(self, group_name, creator):
         if group_name not in self.groups:
-            self.groups[group_name] = [creator]  # El creador es el primer miembro del grupo
+            self.groups[group_name] = [creator]
             self.clients[creator].send(f"Grupo '{group_name}' creado con éxito.".encode('utf-8'))
-            self.send_user_groups(creator)  # Enviar la lista actualizada de grupos al creador
+            self.send_user_groups(creator) 
         else:
             self.clients[creator].send(f"El grupo '{group_name}' ya existe.".encode('utf-8'))
 
     def add_to_group(self, group_name, member, requester):
         if group_name in self.groups:
-            if requester in self.groups[group_name]:  # Solo los miembros del grupo pueden agregar a otros
+            if requester in self.groups[group_name]:
                 if member in self.usernames:
                     if member not in self.groups[group_name]:
                         self.groups[group_name].append(member)
                         self.clients[member].send(f"Has sido añadido al grupo '{group_name}'.".encode('utf-8'))
-                        self.send_user_groups(member)  # Enviar la lista actualizada de grupos al nuevo miembro
+                        self.send_user_groups(member)
                     else:
                         self.clients[requester].send(f"El usuario '{member}' ya está en el grupo.".encode('utf-8'))
                 else:
@@ -83,7 +83,7 @@ class Server:
 
     def send_group_message(self, sender, group_name, message):
         if group_name in self.groups:
-            if sender in self.groups[group_name]:  # Solo los miembros del grupo pueden enviar mensajes
+            if sender in self.groups[group_name]:
                 for member in self.groups[group_name]:
                     try:
                         self.clients[member].send(f"{sender}: {message}".encode('utf-8'))
@@ -103,7 +103,6 @@ class Server:
                 client.close()
 
     def send_user_groups(self, username):
-        # Enviar solo los grupos a los que el usuario pertenece
         user_groups = [group for group, members in self.groups.items() if username in members]
         groups_list_message = "GROUPS_LIST " + " ".join(user_groups)
         if username in self.clients:

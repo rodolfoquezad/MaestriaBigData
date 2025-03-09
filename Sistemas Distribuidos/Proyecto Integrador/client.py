@@ -43,8 +43,8 @@ class Client:
         self.selected_group = None
         self.chat_history = {}
         self.group_chat_history = {}
-        self.all_users = []  # Lista para mantener a todos los usuarios
-        self.user_groups = []  # Lista para mantener los grupos del usuario
+        self.all_users = [] 
+        self.user_groups = [] 
         
         self.receive_thread = threading.Thread(target=self.receive_messages)
         self.receive_thread.start()
@@ -55,11 +55,11 @@ class Client:
                 message = self.client_socket.recv(1024).decode('utf-8')
                 if message.startswith("USERS_LIST"):
                     users = message.split()[1:]
-                    self.all_users = users  # Actualizar la lista de usuarios
+                    self.all_users = users
                     self.update_users_and_groups_list()
                 elif message.startswith("GROUPS_LIST"):
                     groups = message.split()[1:]
-                    self.user_groups = groups  # Actualizar la lista de grupos del usuario
+                    self.user_groups = groups 
                     self.update_users_and_groups_list()
                 elif message.startswith("(Privado)"):
                     sender = message.split(":")[0].split()[1]
@@ -113,11 +113,9 @@ class Client:
 
     def update_users_and_groups_list(self):
         self.users_listbox.delete(0, tk.END)
-        # Agregar usuarios
         for user in self.all_users:
             if user != self.username:
                 self.users_listbox.insert(tk.END, user)
-        # Agregar grupos del usuario
         for group in self.user_groups:
             self.users_listbox.insert(tk.END, group)
 
@@ -128,11 +126,11 @@ class Client:
             if selected_item in self.all_users:
                 self.selected_user = selected_item
                 self.selected_group = None
-                self.add_user_button.config(state=tk.DISABLED)  # Deshabilitar botón si se selecciona un usuario
+                self.add_user_button.config(state=tk.DISABLED)
             else:
                 self.selected_group = selected_item
                 self.selected_user = None
-                self.add_user_button.config(state=tk.NORMAL)  # Habilitar botón si se selecciona un grupo
+                self.add_user_button.config(state=tk.NORMAL)
             
             self.chat_area.config(state=tk.NORMAL)
             self.chat_area.delete(1.0, tk.END)
@@ -156,8 +154,6 @@ class Client:
         if not self.selected_group:
             messagebox.showwarning("Selección", "Debes seleccionar un grupo para agregar usuarios.")
             return
-        
-        # Mostrar diálogo para seleccionar usuarios conectados
         user_to_add = simpledialog.askstring("Agregar Usuario", "Introduce el nombre del usuario a agregar:")
         if user_to_add:
             if user_to_add in self.all_users:
